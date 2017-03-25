@@ -1,0 +1,73 @@
+<html>
+	<head>
+		<title>Simple Sketchpad for Drawing</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" type = "text/css" href="styles/app.css">
+		<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="dist/paper-full.js"></script>
+		<script type="text/paperscript" canvas = "paperCanvas" src="js/canvas-action.js"></script>
+	</head>
+
+	<body>
+		<header role = "banner">
+			<h2>Simple SketchPad for Drawing.</h2>
+			<nav class = "navbar navbar-default" id = "navbar-primary">
+				<div class = "container-fluid">
+					<ul class = "nav navbar-nav navbar-left">
+						<li id = "Save"><a href ="#">Save</a></li>
+						<li id = "Load"><a href ="#">Load</a></li>
+						<li id = "Undo"><a href ="#">Undo</a></li>
+						<li id = "Redo"><a href ="#">Redo</a></li>
+					</ul>
+					<ul class = "nav navbar-nav navbar-right">
+						<li id = "Delete"><a href ="#">Delete</a></li>
+						<li id = "Clear"><a href ="#">Clear</a></li>
+					</ul>
+				</div>
+			</nav>
+		</header>
+		<div class = "container">
+			<div class = "col-md-2 sidebar-left">
+				<div class = "nav navbar-default">
+					<ul class = "nav nav-sidebar">
+						<li id = "Select"><a href = "#">Select</a></li>
+						<li id = "FreeLine"><a href = "#">FreeLine</a></li>
+						<li id = "StrLine"><a href = "#">StrLine</a></li>
+						<li id = "Rect"><a href = "#">Rectangle</a></li>
+						<li id = "Square"><a href = "#">Select</a></li>
+						<li id = "Ellipse"><a href = "#">Ellipse</a></li>
+						<li id = "Circle"><a href = "#">Circle</a></li>
+						<li id = "Polygon"><a href = "#">Polygon</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class = "col-md-2"></div>
+			<div class = "col-md-8 content">
+					<canvas id = "paperCanvas"></canvas>
+			</div>
+			<div class = "col-md-2 sidebar-right">
+				<div class = "nav navbar-default">
+					<ul class = "nav nav-sidebar">
+						<li id = "Cut"><a href = "#">Cut</a></li>
+						<li id = "Copy"><a href = "#">Copy</a></li>
+						<li id = "Paste"><a href = "#">Paste</a></li>
+						<li id = "Group"><a href = "#">Group</a></li>
+						<li id = "Ungroup"><a href = "#">Ungroup</a></li>
+						<li id = "ColourPicker">
+							<input type = "color" id = "colourPicker" defaultValue = "black">
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<footer class="footer">
+	      <div class="container">
+	        <p>Mode:		Action:		Colour:		</p>
+	      </div>
+	    </footer>
+	</body>
+</html>
