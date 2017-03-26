@@ -43,6 +43,11 @@ $("#colourPicker").on('input', function(){
 
 //CHOSE MODE
 $(".mode").click(function(){
+	if (currentPath && currentMode === "Polygon"){
+		currentPath.remove();
+	} else if (currentPath){
+		currentPath.selected = false;
+	}
 	currentMode = $(this).attr('id');
 	textMode.innerText = "Current Mode: " + currentMode;
 	if (currentMode === "Polygon"){
@@ -211,6 +216,7 @@ function onMouseUp(event){
 	if (stuffChanged === true && currentMode != "Polygon"){
 		updateCanvas();
 	}
+	stuffChanged = false;
 }
 
 function updateCanvas(){
