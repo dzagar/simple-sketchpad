@@ -17,16 +17,13 @@
 			<h2>Simple SketchPad for Drawing.</h2>
 			<nav class = "navbar navbar-default" id = "navbar-primary">
 				<div class = "container-fluid">
-					<ul class = "nav navbar-nav navbar-left">
-						<li class = "action" id = "Save"><a href ="#">Save</a></li>
-						<li class = "action" id = "Load"><a href ="#">Load</a></li>
-						<li class = "action" id = "Undo"><a href ="#">Undo</a></li>
-						<li class = "action" id = "Redo"><a href ="#">Redo</a></li>
-					</ul>
-					<ul class = "nav navbar-nav navbar-right">
-						<li class = "applyPolygon"><a href = "#">Apply Polygon</a></li>
-						<li class = "action" id = "Delete"><a href ="#">Delete</a></li>
-						<li class = "action" id = "Clear"><a href ="#">Clear</a></li>
+					<ul class = "nav navbar-nav">
+						<li class = "action" id = "Save"><a href ="#"><span class = "glyphicon glyphicon-floppy-disk"></span> Save</a></li>
+						<li class = "action" id = "Load"><a href ="#"><span class = "glyphicon glyphicon-open"></span> Load</a></li>
+						<li class = "action" id = "Undo"><a href ="#"><span class = "glyphicon glyphicon-chevron-left"></span> Undo</a></li>
+						<li class = "action" id = "Redo"><a href ="#">Redo <span class = "glyphicon glyphicon-chevron-right"></span></a></li>
+						<li class = "action" id = "Delete"><a href ="#">Delete <span class = "glyphicon glyphicon-trash"></span></a></li>
+						<li class = "action" id = "Clear"><a href ="#">Clear <span class = "glyphicon glyphicon-erase"></span></a></li>
 					</ul>
 				</div>
 			</nav>
@@ -35,47 +32,55 @@
 			<div class = "col-md-2 sidebar-left">
 				<div class = "nav navbar-default">
 					<ul class = "nav nav-sidebar">
-						<li class = "mode" id = "Select"><a href = "#">Select</a></li>
-						<li class = "mode" id = "FreeLine"><a href = "#">FreeLine</a></li>
-						<li class = "mode" id = "StrLine"><a href = "#">StrLine</a></li>
-						<li class = "mode" id = "Rect"><a href = "#">Rectangle</a></li>
-						<li class = "mode" id = "Square"><a href = "#">Square</a></li>
-						<li class = "mode" id = "Ellipse"><a href = "#">Ellipse</a></li>
-						<li class = "mode" id = "Circle"><a href = "#">Circle</a></li>
-						<li class = "mode" id = "Polygon"><a href = "#">Polygon</a></li>
+						<li class = "mode activeMode" id = "Select"><a href = "#">Select  <span class = "glyphicon glyphicon-move pull-right"></span></a></li>
+						<li class = "mode" id = "FreeLine"><a href = "#">Free Line  <span class = "glyphicon glyphicon-pencil pull-right"></span></a></li>
+						<li class = "mode" id = "StrLine"><a href = "#">Line  <span class = "glyphicon glyphicon-minus pull-right"></span></a></li>
+						<li class = "mode" id = "Rect"><a href = "#">Rectangle  <span class = "pull-right">&#9645;</span></a></li>
+						<li class = "mode" id = "Square"><a href = "#">Square  <span class = "pull-right">&#9633;</span></a></li>
+						<li class = "mode" id = "Ellipse"><a href = "#">Ellipse  <span class = "pull-right">&#x2B2F;</span></a></li>
+						<li class = "mode" id = "Circle"><a href = "#">Circle  <span class = "pull-right">&#9675;</span></a></li>
+						<li class = "mode" id = "Polygon"><a href = "#">Polygon  <span class = "pull-right">&#11040;</span></a></li>
+						<li class = "applyPolygon"><a href = "#">Apply Polygon</a></li>
+						<li><a href = "#"></a></li>
+						<li><a href = "#"></a></li>
+						<li><a href = "#"></a></li>
+						<li><a href = "#"></a></li>
+						<li><a href = "#"></a></li>
+						<li id = "ColourPicker">
+							<a href = "#">
+								Colour <span class = "pull-right"><input type = "color" id = "colourPicker" defaultValue = "black"></span>
+							</a>
+						</li>
 					</ul>
 				</div>
 			</div>
 			<div class = "col-md-2"></div>
-			<div class = "col-md-8 content">
+			<div class = "col-md-8 content" style = "padding:0;">
 					<canvas id = "paperCanvas"></canvas>
 			</div>
 			<div class = "col-md-2 sidebar-right">
 				<div class = "nav navbar-default">
 					<ul class = "nav nav-sidebar">
-						<li class = "action" id = "Cut"><a href = "#">Cut</a></li>
-						<li class = "action" id = "Copy"><a href = "#">Copy</a></li>
-						<li class = "action" id = "Paste"><a href = "#">Paste</a></li>
-						<li id = "ColourPicker">
-							<input type = "color" id = "colourPicker" defaultValue = "black">
-						</li>
+						<li class = "action" id = "Cut"><a href = "#"><span class = "glyphicon glyphicon-scissors pull-left"></span>  Cut</a></li>
+						<li class = "action" id = "Copy"><a href = "#"><span class = "glyphicon glyphicon-copy pull-left"></span>  Copy</a></li>
+						<li class = "action" id = "Paste"><a href = "#"><span class = "glyphicon glyphicon-paste pull-left"></span>  Paste</a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 		<footer class="footer">
 	      <div class="container">
-	      	<div class = "col-md-3"></div>
-	      	<div class = "col-md-2">
+	      	<div class = "col-md-2"></div>
+	      	<div class = "col-md-3">
 	        	<p id = "modeText"></p>
 	        </div>
-	        <div class = "col-md-2">
+	        <div class = "col-md-3">
 	        	<p id = "actionText"></p>
 	        </div>
 	        <div class = "col-md-2">
 	        	<p id = "colourText"></p>
 	        </div>
-	        <div class = "col-md-3"></div>
+	        <div class = "col-md-2"></div>
 	      </div>
 	    </footer>
 	</body>

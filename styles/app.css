@@ -35,9 +35,21 @@ header[role="banner"] > h2 {
 	text-align:center;
 }
 
+.navbar .navbar-nav {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+}
+
 .navbar-nav > li {
 	padding-left:30px;
 	padding-right:30px;
+}
+li > a {
+  color: black;
+}
+.navbar-default .container-fluid .navbar-nav li > a {
+  color:black;
 }
 
 @media (min-width: 768px) {
@@ -85,9 +97,13 @@ header[role="banner"] > h2 {
   padding-right: 20px;
   padding-left: 20px;
 }
-.navbar-default .navbar-nav .applyPolygon > a {
+.navbar-default .nav-sidebar .applyPolygon > a {
   display:none;
   background-color: green;
   color:white;
   text-decoration: none;
+}
+.activeMode > a{
+  background-color: blue !important;
+  color:white;
 }

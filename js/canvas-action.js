@@ -4,12 +4,8 @@ var savedDrawing;
 var currentColour = "#000000"; //Default to black
 var currentMode = "Select"; //Default to select mode
 var currentAction = "None"; //Default to no action
-var currentShape;
-var selectedObjIndex = -1;
 var currentPath;
 var pathCopy;
-var complPaths = [];
-var incPaths = [];
 var drawingStates = [];
 var undoStates = [];
 var stuffChanged = true;
@@ -44,6 +40,7 @@ $("#colourPicker").on('input', function(){
 
 //CHOSE MODE
 $(".mode").click(function(){
+	$("#"+currentMode).removeClass("activeMode");
 	if (currentPath && currentMode === "Polygon"){
 		currentPath.remove();
 	} else if (currentPath){
@@ -51,16 +48,29 @@ $(".mode").click(function(){
 	}
 	currentMode = $(this).attr('id');
 	textMode.innerText = "Current Mode: " + currentMode;
+	$("#"+currentMode).addClass("activeMode")
 	if (currentMode != "Select"){
 		$('#paperCanvas').css("cursor", "crosshair");
+		$("#Cut").addClass("disabled");
+		$("#Cut").css("pointer-events", "none");
+		$("#Copy").addClass("disabled");
+		$("#Copy").css("pointer-events", "none");
+		$("#Paste").addClass("disabled");
+		$("#Paste").css("pointer-events", "none");
 	} else {
 		$('#paperCanvas').css("cursor", "move");
+		$("#Cut").removeClass("disabled");
+		$("#Cut").css("pointer-events", "auto");
+		$("#Copy").removeClass("disabled");
+		$("#Copy").css("pointer-events", "auto");
+		$("#Paste").removeClass("disabled");
+		$("#Paste").css("pointer-events", "auto");
 	}
 	if (currentMode === "Polygon"){
 		currentPath = new Path();
-		$(".navbar-default .navbar-nav .applyPolygon > a").css("display", "block");
+		$(".navbar-default .nav-sidebar .applyPolygon > a").css("display", "block");
 	} else {
-		$(".navbar-default .navbar-nav .applyPolygon > a").css("display", "none");
+		$(".navbar-default .nav-sidebar .applyPolygon > a").css("display", "none");
 	}
 });
 
@@ -144,7 +154,9 @@ $(".applyPolygon").click(function(){
 
 function onMouseDown(event){
 	if (currentMode === "Select"){
-		currentPath.selected = false;
+		if(currentPath){
+			currentPath.selected = false;
+		}
 		var hitResult = canvas.hitTest(event.point, hitOptions);
 		if (!hitResult)
                 return;
@@ -224,6 +236,7 @@ function onMouseUp(event){
 }
 
 function updateCanvas(){
+	if (currentPath) currentPath.selected = false;
 	var newDrawing = canvas.exportJSON();
 	drawingStates.push(newDrawing);
 }
