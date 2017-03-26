@@ -11,8 +11,8 @@ var pathCopy;
 var complPaths = [];
 var incPaths = [];
 var drawingStates = [];
+var undoStates = [];
 var stuffChanged = true;
-var numUndos = 0;
 var textMode;
 var textAction;
 var textColour;
@@ -32,6 +32,7 @@ $(document).ready(function(){
 	textAction.innerText = "Last Action: " + currentAction;
 	textColour = document.getElementById("colourText");
 	textColour.innerText = "Colour: " + currentColour;
+	$('#paperCanvas').css("cursor", "move");
 });
 
 //SET COLOUR
@@ -50,6 +51,11 @@ $(".mode").click(function(){
 	}
 	currentMode = $(this).attr('id');
 	textMode.innerText = "Current Mode: " + currentMode;
+	if (currentMode != "Select"){
+		$('#paperCanvas').css("cursor", "crosshair");
+	} else {
+		$('#paperCanvas').css("cursor", "move");
+	}
 	if (currentMode === "Polygon"){
 		currentPath = new Path();
 		$(".navbar-default .navbar-nav .applyPolygon > a").css("display", "block");
@@ -75,22 +81,22 @@ $(".action").click(function(){
 			}
 			break;
 		case "Undo":
-			if (numUndos < drawingStates.length){
-				console.log('undo');
-				canvas.clear();
-				canvas.importJSON(drawingStates[drawingStates.length-1-numUndos-1]);
-				numUndos++;
-			}
+			var undoState = drawingStates.pop();
+			undoStates.push(undoState);
+			canvas.clear();
+			canvas.importJSON(drawingStates[drawingStates.length-1]);
 			break;
 		case "Redo":
-			if (numUndos > 0){
-				console.log('redo');
+			if (undoStates.length > 0){
+				var redoState = undoStates.pop();
+				drawingStates.push(redoState);
 				canvas.clear();
-				canvas.importJSON(drawingStates[drawingStates.length-1-numUndos+1]);
-				numUndos--;
+				canvas.importJSON(drawingStates[drawingStates.length-1]);
 			}
 			break;
 		case "Delete":
+			currentPath.remove();
+			updateCanvas();
 			break;
 		case "Clear":
 			if (confirm('You are clearing the drawing space. Your current work will be lost.')){
@@ -151,14 +157,17 @@ function onMouseDown(event){
             currentPath.selected = true;
         }
 	} else if (currentMode === "FreeLine"){
+		undoStates = [];
 		currentPath = new Path();
 		currentPath.strokeColor = currentColour;
 		currentPath.add(event.point);
 	}else if (currentMode === "Polygon"){
+		undoStates = [];
 		currentPath.selected = true;
 		currentPath.strokeColor = "white";
 		currentPath.add(event.point);
 	}else{
+		undoStates = [];
 		currentPath = new Path();
 		currentPath.strokeColor = currentColour;
 	}
