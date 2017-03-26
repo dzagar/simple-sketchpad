@@ -128,10 +128,6 @@ $(".action").click(function(){
 				pathPaste.visible = true;
 			}
 			break;
-		case "Group":
-			break;
-		case "Ungroup":
-			break;
 	}
 	textAction.innerText = "Last Action: " + currentAction;
 });
@@ -216,7 +212,6 @@ function onMouseDrag(event){
 				currentPath = new Path.Ellipse(square);
 				currentPath.strokeColor = currentColour;
 				break;
-
 		}
 	}
 }
