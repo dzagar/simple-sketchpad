@@ -18,14 +18,14 @@
 			<nav class = "navbar navbar-default" id = "navbar-primary">
 				<div class = "container-fluid">
 					<ul class = "nav navbar-nav navbar-left">
-						<li id = "Save"><a href ="#">Save</a></li>
-						<li id = "Load"><a href ="#">Load</a></li>
-						<li id = "Undo"><a href ="#">Undo</a></li>
-						<li id = "Redo"><a href ="#">Redo</a></li>
+						<li class = "action" id = "Save"><a href ="#">Save</a></li>
+						<li class = "action" id = "Load"><a href ="#">Load</a></li>
+						<li class = "action" id = "Undo"><a href ="#">Undo</a></li>
+						<li class = "action" id = "Redo"><a href ="#">Redo</a></li>
 					</ul>
 					<ul class = "nav navbar-nav navbar-right">
-						<li id = "Delete"><a href ="#">Delete</a></li>
-						<li id = "Clear"><a href ="#">Clear</a></li>
+						<li class = "action" id = "Delete"><a href ="#">Delete</a></li>
+						<li class = "action" id = "Clear"><a href ="#">Clear</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -34,14 +34,14 @@
 			<div class = "col-md-2 sidebar-left">
 				<div class = "nav navbar-default">
 					<ul class = "nav nav-sidebar">
-						<li id = "Select"><a href = "#">Select</a></li>
-						<li id = "FreeLine"><a href = "#">FreeLine</a></li>
-						<li id = "StrLine"><a href = "#">StrLine</a></li>
-						<li id = "Rect"><a href = "#">Rectangle</a></li>
-						<li id = "Square"><a href = "#">Select</a></li>
-						<li id = "Ellipse"><a href = "#">Ellipse</a></li>
-						<li id = "Circle"><a href = "#">Circle</a></li>
-						<li id = "Polygon"><a href = "#">Polygon</a></li>
+						<li class = "mode" id = "Select"><a href = "#">Select</a></li>
+						<li class = "mode" id = "FreeLine"><a href = "#">FreeLine</a></li>
+						<li class = "mode" id = "StrLine"><a href = "#">StrLine</a></li>
+						<li class = "mode" id = "Rect"><a href = "#">Rectangle</a></li>
+						<li class = "mode" id = "Square"><a href = "#">Square</a></li>
+						<li class = "mode" id = "Ellipse"><a href = "#">Ellipse</a></li>
+						<li class = "mode" id = "Circle"><a href = "#">Circle</a></li>
+						<li class = "mode" id = "Polygon"><a href = "#">Polygon</a></li>
 					</ul>
 				</div>
 			</div>
@@ -52,11 +52,11 @@
 			<div class = "col-md-2 sidebar-right">
 				<div class = "nav navbar-default">
 					<ul class = "nav nav-sidebar">
-						<li id = "Cut"><a href = "#">Cut</a></li>
-						<li id = "Copy"><a href = "#">Copy</a></li>
-						<li id = "Paste"><a href = "#">Paste</a></li>
-						<li id = "Group"><a href = "#">Group</a></li>
-						<li id = "Ungroup"><a href = "#">Ungroup</a></li>
+						<li class = "action" id = "Cut"><a href = "#">Cut</a></li>
+						<li class = "action" id = "Copy"><a href = "#">Copy</a></li>
+						<li class = "action" id = "Paste"><a href = "#">Paste</a></li>
+						<li class = "action" id = "Group"><a href = "#">Group</a></li>
+						<li class = "action" id = "Ungroup"><a href = "#">Ungroup</a></li>
 						<li id = "ColourPicker">
 							<input type = "color" id = "colourPicker" defaultValue = "black">
 						</li>
@@ -66,7 +66,9 @@
 		</div>
 		<footer class="footer">
 	      <div class="container">
-	        <p>Mode:		Action:		Colour:		</p>
+	        <p id = "modeText"></p>
+	        <p id = "actionText"></p>
+	        <p id = "colourText"></p>
 	      </div>
 	    </footer>
 	</body>
