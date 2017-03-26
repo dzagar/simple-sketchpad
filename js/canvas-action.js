@@ -1,4 +1,6 @@
 //GLOBALS
+var canvas;
+var savedDrawing;
 var currentColour = "black"; //Default to black
 var currentMode = "Select"; //Default to select mode
 var currentAction = ""; //Default to no action
@@ -13,6 +15,7 @@ var textAction;
 var textColour;
 
 $(document).ready(function(){
+	canvas = paper.project;
 	textMode = document.getElementById("modeText");
 	textMode.innerText = "Current Mode: " + currentMode;
 	textAction = document.getElementById("actionText");
@@ -55,8 +58,16 @@ $(".action").click(function(){
 	currentAction = $(this).attr('id');
 	switch(currentAction){
 		case "Save":
+			var currentDrawing = canvas.exportJSON();
+			savedDrawing = currentDrawing;
+			alert('Your drawing has been saved.');
 			break;
 		case "Load":
+			if (confirm('You are loading a saved drawing. Your current work will be lost.')){
+				canvas.clear();
+				canvas.importJSON(savedDrawing);
+				alert('Your drawing has been loaded from the last Save.');
+			}
 			break;
 		case "Undo":
 			if (currentMode === "Select"){
@@ -78,10 +89,12 @@ $(".action").click(function(){
 		case "Delete":
 			break;
 		case "Clear":
+			canvas.clear();
 			break;
 		case "Cut":
 			if (complPaths[selectedObjIndex]){
-				pathCopy = complPaths[selectedObjIndex].pop();
+				pathCopy = complPaths[selectedObjIndex];
+				complPaths.splice(selectedObjIndex, 1);
 				pathCopy.visible = false;
 				pathCopy.selected = false;
 			}
