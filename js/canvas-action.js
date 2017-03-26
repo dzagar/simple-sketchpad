@@ -1,21 +1,31 @@
 //GLOBALS
 var canvas;
 var savedDrawing;
-var currentColour = "black"; //Default to black
+var currentColour = "#000000"; //Default to black
 var currentMode = "Select"; //Default to select mode
-var currentAction = ""; //Default to no action
+var currentAction = "None"; //Default to no action
 var currentShape;
 var selectedObjIndex = -1;
 var currentPath;
 var pathCopy;
 var complPaths = [];
 var incPaths = [];
+var drawingStates = [];
+var stuffChanged = true;
+var numUndos = 0;
 var textMode;
 var textAction;
 var textColour;
+var hitOptions = {
+    segments: true,
+    stroke: true,
+    fill: true,
+    tolerance: 5
+};
 
 $(document).ready(function(){
 	canvas = paper.project;
+	updateCanvas();
 	textMode = document.getElementById("modeText");
 	textMode.innerText = "Current Mode: " + currentMode;
 	textAction = document.getElementById("actionText");
@@ -35,21 +45,11 @@ $("#colourPicker").on('input', function(){
 $(".mode").click(function(){
 	currentMode = $(this).attr('id');
 	textMode.innerText = "Current Mode: " + currentMode;
-	if (currentMode === "Select"){
-		selectedObjIndex++;
-		if (complPaths[selectedObjIndex-1]){
-			complPaths[selectedObjIndex-1].selected= false;
-		}
-		if (complPaths[selectedObjIndex]){
-			complPaths[selectedObjIndex].selected = true;
-		} else {
-			selectedObjIndex = 0;
-			if (complPaths[selectedObjIndex]){
-				complPaths[selectedObjIndex].selected = true;
-			}
-		}
+	if (currentMode === "Polygon"){
+		currentPath = new Path();
+		$(".navbar-default .navbar-nav .applyPolygon > a").css("display", "block");
 	} else {
-		if (complPaths[selectedObjIndex]) complPaths[selectedObjIndex].selected = false;
+		$(".navbar-default .navbar-nav .applyPolygon > a").css("display", "none");
 	}
 });
 
@@ -70,53 +70,51 @@ $(".action").click(function(){
 			}
 			break;
 		case "Undo":
-			if (currentMode === "Select"){
-
-			}
-			var incPath = complPaths.pop();
-			if (incPath){
-				incPath.visible = false;
-				incPaths.push(incPath.clone());
+			if (numUndos < drawingStates.length){
+				console.log('undo');
+				canvas.clear();
+				canvas.importJSON(drawingStates[drawingStates.length-1-numUndos-1]);
+				numUndos++;
 			}
 			break;
 		case "Redo":
-			var complPath = incPaths.pop();
-			if (complPath){
-				complPaths.push(complPath);
-				complPath.visible = true;
+			if (numUndos > 0){
+				console.log('redo');
+				canvas.clear();
+				canvas.importJSON(drawingStates[drawingStates.length-1-numUndos+1]);
+				numUndos--;
 			}
 			break;
 		case "Delete":
 			break;
 		case "Clear":
-			canvas.clear();
+			if (confirm('You are clearing the drawing space. Your current work will be lost.')){
+				canvas.clear();
+			}
 			break;
 		case "Cut":
-			if (complPaths[selectedObjIndex]){
-				pathCopy = complPaths[selectedObjIndex];
-				complPaths.splice(selectedObjIndex, 1);
+			if (currentPath){
+				pathCopy = currentPath;
 				pathCopy.visible = false;
 				pathCopy.selected = false;
 			}
 			break;
 		case "Copy":
-			if (complPaths[selectedObjIndex]){
-				pathCopy = complPaths[selectedObjIndex].clone();
+			if (currentPath){
+				pathCopy = currentPath.clone();
 				pathCopy.visible = false;
 				pathCopy.selected = false;
 			}
 			break;
 		case "Paste":
 			if(pathCopy){
-				if (complPaths[selectedObjIndex]){
-					complPaths[selectedObjIndex].selected = false;
+				if (currentPath){
+					currentPath.selected = false;
 				}
 				var pathPaste = pathCopy.clone();
 				pathPaste.selected = true;
 				pathPaste.position = new Point(view.center);
 				pathPaste.visible = true;
-				complPaths.push(pathPaste);
-				selectedObjIndex = complPaths.length - 1;
 			}
 			break;
 		case "Group":
@@ -127,25 +125,48 @@ $(".action").click(function(){
 	textAction.innerText = "Last Action: " + currentAction;
 });
 
+$(".applyPolygon").click(function(){
+	if (confirm('Do you want your polygon to be closed?')){
+		currentPath.closed = true;
+	}
+	currentPath.strokeColor = currentColour;
+	currentPath.selected = false;
+	currentPath = new Path();
+	updateCanvas();
+});
+
 function onMouseDown(event){
-	if (currentMode === "Select" && complPaths[selectedObjIndex]){
-		complPaths[selectedObjIndex].position = event.point;
+	if (currentMode === "Select"){
+		currentPath.selected = false;
+		var hitResult = canvas.hitTest(event.point, hitOptions);
+		if (!hitResult)
+                return;
+        if (hitResult) {
+            currentPath = hitResult.item;
+            currentPath.selected = true;
+        }
 	} else if (currentMode === "FreeLine"){
-		incPaths = [];
 		currentPath = new Path();
 		currentPath.strokeColor = currentColour;
 		currentPath.add(event.point);
-	} else {
-		incPaths = [];
+	}else if (currentMode === "Polygon"){
+		currentPath.selected = true;
+		currentPath.strokeColor = "white";
+		currentPath.add(event.point);
+	}else{
 		currentPath = new Path();
 		currentPath.strokeColor = currentColour;
 	}
 }
 
 function onMouseDrag(event){
-	if (currentMode === "Select" && complPaths[selectedObjIndex]){
-		complPaths[selectedObjIndex].position = event.point;
+	if (currentMode === "Select"){
+		if (currentPath) {
+            currentPath.position += event.delta;
+            stuffChanged = true;
+        }
 	} else {
+		stuffChanged = true;
 		switch(currentMode){
 			case "FreeLine":
 				currentPath.add(event.point);
@@ -164,25 +185,36 @@ function onMouseDrag(event){
 				break;
 			case "Square":
 				currentPath.remove();
+				deltaX = event.point.y - event.downPoint.y;
+				currentPath = new Path.Rectangle(event.downPoint.x, event.downPoint.y, deltaX, deltaX);
+				currentPath.strokeColor = currentColour;
 				break;
 			case "Ellipse":
 				currentPath.remove();
+				var rect = new Rectangle(new Point(event.downPoint), new Point(event.point));
+				currentPath = new Path.Ellipse(rect);
+				currentPath.strokeColor = currentColour;
 				break;
 			case "Circle":
 				currentPath.remove();
+				deltaX = event.point.y - event.downPoint.y;
+				var square = new Rectangle(event.downPoint.x, event.downPoint.y, deltaX, deltaX);
+				currentPath = new Path.Ellipse(square);
+				currentPath.strokeColor = currentColour;
 				break;
-			case "Polygon":
-				currentPath.remove();
-				break;
+
 		}
 	}
 }
 
 function onMouseUp(event){
-	if(currentMode != "Select"){
-		complPaths.push(currentPath);
+	if (stuffChanged === true && currentMode != "Polygon"){
+		updateCanvas();
 	}
 }
 
-
+function updateCanvas(){
+	var newDrawing = canvas.exportJSON();
+	drawingStates.push(newDrawing);
+}
 
