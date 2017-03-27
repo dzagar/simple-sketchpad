@@ -184,6 +184,8 @@ function onMouseDown(event){
 function onMouseDrag(event){
 	if (currentMode === "Select"){
 		if (currentPath) {
+			currentAction = "Move";
+			textAction.innerText = "Last Action: " + currentAction;
             currentPath.position += event.delta;
             stuffChanged = true;
         }
